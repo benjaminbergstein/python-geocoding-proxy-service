@@ -4,6 +4,7 @@ from BaseHTTPServer import HTTPServer
 from application import Application
 
 httpd = HTTPServer(('0.0.0.0', 8000), Application)
+print "Server is running at http://localhost:8000"
 while True:
 	httpd.handle_request()
 
