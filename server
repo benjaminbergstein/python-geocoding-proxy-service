@@ -1,20 +1,10 @@
 #!/usr/bin/env python
 
 from BaseHTTPServer import HTTPServer
-from BaseHTTPServer import BaseHTTPRequestHandler
-import cgi
-import json
+from application import Application
 
-class RestHTTPRequestHandler(BaseHTTPRequestHandler):
-  def do_GET(self):
-    self.send_response(200)
-    self.end_headers()
-    self.wfile.write(json.dumps({'data': 'banana'}))
-    return
-
-httpd = HTTPServer(('0.0.0.0', 8000), RestHTTPRequestHandler)
+httpd = HTTPServer(('0.0.0.0', 8000), Application)
 while True:
-    httpd.handle_request()
+	httpd.handle_request()
 
-if __name__ == '__main__':
-    main()
+main()

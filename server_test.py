@@ -10,7 +10,8 @@ class ServerTestCase(unittest.TestCase):
     return json.loads(request_handler.read().decode('utf-8'))
 
   def test_basic_request(self):
-    self.assertEqual(self.fetch_endpoint('/'), {'data': 'banana'})
+    response = self.fetch_endpoint('/?address=270%207th%20St,%20San%20Francisco,%20CA%2094103')
+    self.assertEqual({ 'address': ['270 7th St, San Francisco, CA 94103'] }, response)
 
 if __name__ == '__main__':
     unittest.main()
