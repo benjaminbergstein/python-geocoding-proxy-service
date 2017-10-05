@@ -28,7 +28,7 @@ sightglass_coordinates_from_here = {
 real_http_connection = HttpConnection()
 config = Config()
 
-class ServerTestCase(unittest.TestCase):
+class IntegrationTestCase(unittest.TestCase):
  	def fetch_endpoint(self, path):
  		url = 'http://localhost:8000{0}'.format(path)
  		request_handler = urllib.request.urlopen(url)
