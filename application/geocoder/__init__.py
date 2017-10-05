@@ -21,7 +21,4 @@ class Geocoder:
 		if result == False:
 			result = here_request.geocode()
 
-		if result == False:
-			return 'something went wrong'
-
 		return result

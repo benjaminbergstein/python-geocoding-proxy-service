@@ -7,7 +7,13 @@ from application.http_connection import HttpConnection
 class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		coordinates = self.perform_geocoding()
-		self.send_json(200, coordinates)
+
+		if coordinates is False:
+			self.send_json(503, {
+				'message': 'There are no geocoding services available. Try again later.'
+			})
+		else:
+			self.send_json(200, coordinates)
 		return
 
 	def perform_geocoding(self):
