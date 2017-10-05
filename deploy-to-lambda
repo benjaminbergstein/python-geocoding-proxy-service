@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+LAMBDA_NAME=$1
+VERSION=$2
+BUCKET=$3
+SECRETS_FILE=$4
+
+git ls-files | xargs zip tmp/lambda-payload.zip
+zip tmp/lambda-payload.zip $SECRETS_FILE
+aws s3 cp tmp/lambda-payload.zip s3://$BUCKET/versions/application-$VERSION.zip
+
+aws lambda update-function-code \
+	--function-name $LAMBDA_NAME \
+	--s3-bucket $BUCKET \
+	--s3-key versions/application-$VERSION.zip
