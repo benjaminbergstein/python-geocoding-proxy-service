@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 import json
 from application.geocoder import Geocoder
+from application.http_connection import HttpConnection
 
 class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
@@ -10,7 +11,8 @@ class Server(BaseHTTPRequestHandler):
 		return
 
 	def perform_geocoding(self):
-		geocoder = Geocoder()
+		http_connection = HttpConnection()
+		geocoder = Geocoder(http_connection)
 		uri = urlparse(self.path)
 		query = parse_qs(uri.query)
 		coordinates = geocoder.geocode(query['address'][0])

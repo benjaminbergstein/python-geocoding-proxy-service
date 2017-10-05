@@ -4,7 +4,6 @@ import os, sys
 package_directory = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, os.path.join(package_directory, 'application'))
 
-import sys, os
 from http.server import HTTPServer
 from server import Server
 
