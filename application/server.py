@@ -8,12 +8,17 @@ class Server(BaseHTTPRequestHandler):
 	def do_GET(self):
 		coordinates = self.perform_geocoding()
 
-		if coordinates is False:
+		if coordinates is None:
+			self.send_json(400, {
+				'message': 'Please provide an address to geocode your request query string (e.g. "?address=Google%20Headquarters")'
+			})
+		elif coordinates is False:
 			self.send_json(503, {
 				'message': 'There are no geocoding services available. Try again later.'
 			})
 		else:
 			self.send_json(200, coordinates)
+
 		return
 
 	def perform_geocoding(self):
@@ -21,6 +26,10 @@ class Server(BaseHTTPRequestHandler):
 		geocoder = Geocoder(http_connection)
 		uri = urlparse(self.path)
 		query = parse_qs(uri.query)
+
+		if query.get('address') is None:
+			return None
+
 		coordinates = geocoder.geocode(query['address'][0])
 		return coordinates
 

@@ -1,6 +1,9 @@
 import urllib.request
 import urllib.parse
-import unittest, os, sys, json
+import os, sys, json
+import urllib.request
+
+import unittest
 from unittest import mock
 
 from application.config import Config
@@ -29,15 +32,17 @@ real_http_connection = HttpConnection()
 config = Config()
 
 class IntegrationTestCase(unittest.TestCase):
- 	def fetch_endpoint(self, path):
- 		url = 'http://localhost:8000{0}'.format(path)
- 		request_handler = urllib.request.urlopen(url)
- 		response_body = request_handler.read().decode('utf-8')
- 		return json.loads(response_body)
+	def fetch_endpoint(self, path):
+		host = 'http://localhost:8000'
+		return real_http_connection.get_url(host, path, {})
 
- 	def test_basic_request(self):
- 		response = self.fetch_endpoint('/?address=270%207th%20St,%20San%20Francisco,%20CA%2094103')
- 		self.assertEqual(sightglass_coordinates_from_google, response)
+	def test_successful_request(self):
+		response = self.fetch_endpoint('/?address=270%207th%20St,%20San%20Francisco,%20CA%2094103')
+		self.assertEqual(sightglass_coordinates_from_google, response.json())
+
+	def test_bad_request(self):
+		response = self.fetch_endpoint('/')
+		self.assertEqual(400, response.code)
 
 class GeocoderTest(unittest.TestCase):
 	def test_basic(self):
@@ -93,6 +98,18 @@ class GeonamesRequestTestCase(unittest.TestCase):
 		geonames_request = GeonamesRequest(config, address, http_connection)
 		geocoder_response = geonames_request.geocode()
 		self.assertEqual(sightglass_coordinates_from_geonames, geocoder_response)
+
+class HttpConnectionTestCase(unittest.TestCase):
+	def test_http_connection_fails(self):
+		http_connection = HttpConnection()
+
+		def http_error(url):
+			raise urllib.request.HTTPError(url, 500, 'Server error', {}, None)
+
+		http_connection.perform_get = http_error
+
+		response = http_connection.get_url('http://google.com', '', {})
+		self.assertEqual(response.code, 500)
 
 class HereRequestTestCase(unittest.TestCase):
 	def test_request(self):
