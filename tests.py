@@ -5,8 +5,8 @@ import unittest, os, sys, json
 from application.geocoder import Geocoder
 
 sightglass_coordinates = {
-  'lat': 37.7769813,
-  'lng': -122.4085708
+  'lat': 37.7768998,
+  'lng': -122.4086371
 }
 
 class ServerTestCase(unittest.TestCase):
