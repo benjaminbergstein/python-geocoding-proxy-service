@@ -1,12 +1,15 @@
-from BaseHTTPServer import BaseHTTPRequestHandler
-from urlparse import urlparse, parse_qs
+from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 import json
+from geocoder import Geocoder
 
 class Application(BaseHTTPRequestHandler):
-	def do_GET(self):
-		uri = urlparse(self.path)
-		query = parse_qs(uri.query)
-		self.send_response(200)
-		self.end_headers()
-		self.wfile.write(json.dumps(query))
-		return
+	def __init__(self):
+		self.config = self.load_config()
+		self.geocoder = Geocoder(self)
+
+	def load_config(self):
+		config_file = open('./secrets.json', 'r')
+		config_data = json.loads(config_file.read())
+		config_file.close()
+		return config_data

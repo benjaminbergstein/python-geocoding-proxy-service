@@ -1,10 +1,15 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from BaseHTTPServer import HTTPServer
-from application import Application
+import os, sys
+package_directory = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.join(package_directory, 'application'))
 
-httpd = HTTPServer(('0.0.0.0', 8000), Application)
-print "Server is running at http://localhost:8000"
+import sys, os
+from http.server import HTTPServer
+from server import Server
+
+httpd = HTTPServer(('0.0.0.0', 8000), Server)
+print("Server is running at http://localhost:8000")
 while True:
 	httpd.handle_request()
 

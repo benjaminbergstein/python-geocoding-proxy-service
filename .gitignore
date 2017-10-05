@@ -1,2 +1,4 @@
 .idea
 **/*.pyc
+secrets.json
+junk.txt
